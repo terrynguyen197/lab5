@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main(void) {
+  int rows, cols;
+  int min_row = 0, min_col = 0;
+  int min_sum = 0;
+  int i, j;
+
+  printf("Enter the number of rows and columns: ");
+  scanf("%d %d", &rows, &cols);
+
+  printf("Enter the range for the random numbers: ");
+  int min, max;
+  scanf("%d %d", &min, &max);
+
+  int matrix[rows][cols];
+
+  // Seed the random number generator
+  srand(time(NULL));
+
+  // Fill the matrix with random numbers
+  for (i = 0; i < rows; i++) {
+    for (j = 0; j < cols; j++) {
+      matrix[i][j] = rand() % (max - min + 1) + min;
+    }
+  }
+
+  // Find the row and column with the minimum sum
+  for (i = 0; i < rows; i++) {
+    int row_sum = 0;
+    for (j = 0; j < cols; j++) {
+      row_sum += matrix[i][j];
+    }
+    if (i == 0 || row_sum < min_sum) {
+      min_row = i;
+      min_sum = row_sum;
+    }
+  }
+  for (j = 0; j < cols; j++) {
+    int col_sum = 0;
+    for (i = 0; i < rows; i++) {
+      col_sum += matrix[i][j];
+    }
+    if (j == 0 || col_sum < min_sum) {
+      min_col = j;
+      min_sum = col_sum;
+    }
+  }
+
+  // Print the matrix
+  for (i = 0; i < rows; i++) {
+    for (j = 0; j < cols; j++) {
+      printf("%d ", matrix[i][j]);
+    }
+    putchar('\n');
+  }
+
+  // Print the result
+  printf("Row %d has the minimum sum of %d\n", min_row + 1, min_sum);
+  printf("Column %d has the minimum sum of %d\n", min_col + 1, min_sum);
+
+  return 0;
+}
