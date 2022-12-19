@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main(void) {
+  int rows, cols;
+
+  printf("Enter the number of rows and columns: ");
+  scanf("%d %d", &rows, &cols);
+
+  printf("Enter the range for the random characters: ");
+  char min, max;
+  scanf(" %c %c", &min, &max);
+
+  char matrix[rows][cols];
+
+  // Seed the random number generator
+  srand(time(NULL));
+
+  // Fill the matrix with random characters
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      matrix[i][j] = rand() % (max - min + 1) + min;
+    }
+  }
+
+  // Print the matrix
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      printf("%c ", matrix[i][j]);
+    }
+    putchar('\n');
+  }
+
+  return 0;
+}
