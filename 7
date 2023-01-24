@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <math.h>
+
+struct Point {
+    int x, y;
+};
+
+double distance(struct Point p1, struct Point p2) {
+    return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2));
+}
+
+int main() {
+    struct Point vertices[3];
+    double sides[3];
+
+    for (int i = 0; i < 3; i++) {
+        printf("Enter the coordinates of vertex %d: ", i + 1);
+        if (scanf("%d%d", &vertices[i].x, &vertices[i].y) != 2) {
+            printf("Invalid input!\n");
+            return 1;
+        }
+    }
+
+    for (int i = 0; i < 3; i++) {
+        sides[i] = distance(vertices[i], vertices[(i + 1) % 3]);
+    }
+
+    printf("The coordinates of the vertices are: \n");
+    for (int i = 0; i < 3; i++) {
+        printf("(%d, %d)\n", vertices[i].x, vertices[i].y);
+    }
+
+    double perimeter = sides[0] + sides[1] + sides[2];
+    printf("The perimeter of the triangle is: %f\n", perimeter);
+
+    int equal_sides = 0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = i + 1; j < 3; j++) {
+            if (fabs(sides[i] - sides[j]) < 0.00001) {
+                equal_sides++;
+            }
+        }
+    }
+
+    if (equal_sides == 3) {
+        printf("The triangle is an equilateral triangle.\n");
+    } else if (equal_sides == 1) {
+        printf("The triangle is an isosceles triangle.\n");
+    } else {
+        printf("The triangle is neither equilateral nor isosceles.\n");
+    }
+
+    return 0;
+}
