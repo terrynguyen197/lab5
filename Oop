@@ -1,0 +1,158 @@
+#include <iostream>using namespace std;
+
+class Car {
+
+private:
+
+    int licence;
+
+    int price;
+
+    int number_of_years;
+
+public:
+
+    Car(int licence, int price, int number_of_years) {
+
+        this->licence = licence;
+
+        this->price = price;5
+
+        this->number_of_years = number_of_years;
+
+    }
+
+    int getLicence() {
+
+        return licence;
+
+    }
+
+    void print() {
+
+        cout << "Licence: " << licence << endl;
+
+        cout << "Price: " << price << endl;
+
+        cout << "Number of years: " << number_of_years << endl;
+
+    }
+
+};
+
+struct Element {
+
+    Car* carPtr;
+
+    Element* next;
+
+};
+
+struct Element *head = nullptr;
+
+// Task 1: Returns a pointer to a car with the given licence if it exists in the list otherwise returns nullptr. Car* findCar(int licence) {
+
+    Element* current = head;
+
+    while (current != nullptr) {
+
+        if (current->carPtr->getLicence() == licence) {
+
+            return current->carPtr;
+
+        }
+
+        current = current->next;
+
+    }
+
+    return nullptr;
+
+}
+
+// Task 2: Creates a car with the given data, but only if the car of this licence does not exist in the list. Otherwise a Car and its Element are created. The Element is added to the unidirectional list into appropriate position as cars are sorted ascendingly with their licence ids. 
+
+       void insertCar(int licence, int price, int number_of_years) {
+
+    Car* car = findCar(licence);
+
+    if (car == nullptr) {
+
+        car = new Car(licence, price, number_of_years);
+
+        Element* element = new Element;
+
+        element->carPtr = car;
+
+        element->next = nullptr;
+
+        if (head == nullptr) {
+
+            head = element;
+
+        } else if (licence < head->carPtr->getLicence()) {
+
+            element->next = head;
+
+            head = element;
+
+        } else {
+
+            Element* prev = head;
+
+            Element* current = head->next;
+
+            while (current != nullptr && current->carPtr->getLicence() < licence) {
+
+                prev = current;
+
+                current = current->next;
+
+            }
+
+            prev->next = element;
+
+            element->next = current;
+
+        }
+
+    }
+
+}
+
+// Task 3: prints data of cars in the list (use print() of a car) void print() {
+
+    Element* current = head;
+
+    while (current != nullptr) {
+
+        current->carPtr->print();
+
+        current = current->next;
+
+    }
+
+}
+
+// Task 4: tests of the car list.int main() {
+
+    insertCar(1, 5000, 2);
+
+    insertCar(2, 7000, 3);
+
+    insertCar(3, 10000, 5);
+
+    Car* car = findCar(2);
+
+    if (car != nullptr) {
+
+        car->print();
+
+    }
+
+    print();
+
+    return 0;
+
+}
+
