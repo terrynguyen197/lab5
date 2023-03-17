@@ -1,158 +1,122 @@
-#include <iostream>using namespace std;
+#include <iostream>
+#include <cstring>
 
-class Car {
-
-private:
-
-    int licence;
-
-    int price;
-
-    int number_of_years;
+class Country
+{
+    int key;
+    char* name;
+    long population;
 
 public:
-
-    Car(int licence, int price, int number_of_years) {
-
-        this->licence = licence;
-
-        this->price = price;5
-
-        this->number_of_years = number_of_years;
-
+    Country(int key, const char* name, long population)
+    {
+        this->key = key;
+        this->name = new char[strlen(name) + 1];
+        strcpy(this->name, name);
+        this->population = population;
     }
 
-    int getLicence() {
-
-        return licence;
-
+    int getKey()
+    {
+        return key;
     }
 
-    void print() {
+    void updatePopulation(long newPopulation)
+    {
+        population = newPopulation;
+    }
 
-        cout << "Licence: " << licence << endl;
-
-        cout << "Price: " << price << endl;
-
-        cout << "Number of years: " << number_of_years << endl;
-
+    void print()
+    {
+        std::cout << "Country key: " << key << ", Name: " << name << ", Population: " << population << std::endl;
     }
 
 };
 
-struct Element {
-
-    Car* carPtr;
-
-    Element* next;
-
+struct Node
+{
+    Country* ptr;
+    Node* next;
 };
 
-struct Element *head = nullptr;
+struct Node* head = nullptr;
 
-// Task 1: Returns a pointer to a car with the given licence if it exists in the list otherwise returns nullptr. Car* findCar(int licence) {
-
-    Element* current = head;
-
-    while (current != nullptr) {
-
-        if (current->carPtr->getLicence() == licence) {
-
-            return current->carPtr;
-
+void addCountry(int key, const char* name, long population)
+{
+    Node* temp = head;
+    while (temp != nullptr)
+    {
+        if (temp->ptr->getKey() == key)
+        {
+            temp->ptr->print();
+            std::cout << "Population updated to " << population << std::endl;
+            temp->ptr->updatePopulation(population);
+            return;
         }
-
-        current = current->next;
-
+        temp = temp->next;
     }
 
-    return nullptr;
-
+    Country* new_country = new Country(key, name, population);
+    Node* new_node = new Node{new_country, nullptr};
+    if (head == nullptr)
+    {
+        head = new_node;
+    }
+    else
+    {
+        new_node->next = head;
+        head = new_node;
+    }
 }
 
-// Task 2: Creates a car with the given data, but only if the car of this licence does not exist in the list. Otherwise a Car and its Element are created. The Element is added to the unidirectional list into appropriate position as cars are sorted ascendingly with their licence ids. 
-
-       void insertCar(int licence, int price, int number_of_years) {
-
-    Car* car = findCar(licence);
-
-    if (car == nullptr) {
-
-        car = new Car(licence, price, number_of_years);
-
-        Element* element = new Element;
-
-        element->carPtr = car;
-
-        element->next = nullptr;
-
-        if (head == nullptr) {
-
-            head = element;
-
-        } else if (licence < head->carPtr->getLicence()) {
-
-            element->next = head;
-
-            head = element;
-
-        } else {
-
-            Element* prev = head;
-
-            Element* current = head->next;
-
-            while (current != nullptr && current->carPtr->getLicence() < licence) {
-
-                prev = current;
-
-                current = current->next;
-
-            }
-
-            prev->next = element;
-
-            element->next = current;
-
-        }
-
+void print()
+{
+    Node* temp = head;
+    while (temp != nullptr)
+    {
+        temp->ptr->print();
+        temp = temp->next;
     }
-
 }
 
-// Task 3: prints data of cars in the list (use print() of a car) void print() {
+int main()
+{
+    print();
 
-    Element* current = head;
 
-    while (current != nullptr) {
-
-        current->carPtr->print();
-
-        current = current->next;
-
-    }
-
-}
-
-// Task 4: tests of the car list.int main() {
-
-    insertCar(1, 5000, 2);
-
-    insertCar(2, 7000, 3);
-
-    insertCar(3, 10000, 5);
-
-    Car* car = findCar(2);
-
-    if (car != nullptr) {
-
-        car->print();
-
-    }
+    addCountry(1, "USA", 328200000);
+    addCountry(2, "China", 1393000000);
+    addCountry(3, "Japan", 126500000);
+    addCountry(1, "Update USA", 330000000);
+    addCountry(2, "Update China", 1443000000);
+    addCountry(3, "Update Japan", 130500000);
 
     print();
 
     return 0;
-
 }
 
+from this code 
+Add a new method in the Country class: 
+
+long & refPopulation(); //returns reference to the country population  
+Use only this method to refer to/update the population.
+ 
+Extend also Task 1 with two new functions (updateCountry and removeCountry): 
+
+The updateCountry function searches the list for a Country with a given key. If the Countrye with the given key exists the name is updated if is not equal.  
+
+If there is no Country with the given key,  the function creates a new node, the country, and inserts it to the list. The default population is set to 0.  
+
+In all cases the updateCountry function returns the reference to the population. 
+
+int & updateCountry(int key, const char* name); 
+
+ //remove Country of a given key from the list 
+          //i.e. (delete the Country object and the corresponding Node)  
+     void removeCountry(int key); 
+Extend the main() with tests of the updateCountry() and removeCountry() functions.  
+
+All the tests from Task1 should be running as well! In tests, use different sequences of the functions from Task1 and Task2. 
+
+Necessary: In main () show that using updateCountry()  the internal data of the Country can be changed.  
